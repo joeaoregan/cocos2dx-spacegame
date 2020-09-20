@@ -26,6 +26,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "ParallaxNodeExtras.h"
 
 USING_NS_CC;
 
@@ -46,7 +47,7 @@ private:
 	SpriteBatchNode* _batchNode;
 	Sprite *_ship;
 
-	ParallaxNode* _backgroundNode;
+	ParallaxNodeExtras* _backgroundNode;
 	Sprite *_spaceDust1, *_spaceDust2, *_planetSunrise, *_galaxy, *_spatialAnomaly1, *_spatialAnomaly2;
 
 	void update(float dt); // scheduled update

@@ -61,7 +61,7 @@ bool HelloWorld::init()
 	_batchNode->addChild(_ship, 1);
 
 	// 1) Create the ParallaxNode
-	_backgroundNode = ParallaxNode::create();
+	_backgroundNode = ParallaxNodeExtras::create();
 	this->addChild(_backgroundNode, -1);
 
 	// 2) Create the sprites that will be added to the ParallaxNode
@@ -104,4 +104,29 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 void HelloWorld::update(float dt) {
 	auto backgroundScrollVert = Point(-1000, 0);
 	_backgroundNode->setPosition(_backgroundNode->getPosition() + (backgroundScrollVert * dt));
+
+	// Parallax
+	auto spaceDusts = new Vector<Sprite*>(2);
+	spaceDusts->pushBack(_spaceDust1);
+	spaceDusts->pushBack(_spaceDust2);
+	for (Sprite* spaceDust : *spaceDusts) {
+		float xPosition = _backgroundNode->convertToWorldSpace(spaceDust->getPosition()).x;
+		float size = spaceDust->getContentSize().width;
+		if (xPosition < -size / 2) {
+			_backgroundNode->incrementOffset(Point(spaceDust->getContentSize().width * 2, 0), spaceDust);
+		}
+	}
+
+	auto backGrounds = new Vector<Sprite*>(4);
+	backGrounds->pushBack(_galaxy);
+	backGrounds->pushBack(_planetSunrise);
+	backGrounds->pushBack(_spatialAnomaly1);
+	backGrounds->pushBack(_spatialAnomaly2);
+	for (auto background : *backGrounds) {
+		float xPosition = _backgroundNode->convertToWorldSpace(background->getPosition()).x;
+		float size = background->getContentSize().width;
+		if (xPosition < -size) {
+			_backgroundNode->incrementOffset(Point(2000, 0), background);
+		}
+	}
 }
