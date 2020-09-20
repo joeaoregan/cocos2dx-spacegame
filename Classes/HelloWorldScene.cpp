@@ -60,6 +60,31 @@ bool HelloWorld::init()
 	_ship->setPosition(visibleSize.width * 0.1, visibleSize.height * 0.5);
 	_batchNode->addChild(_ship, 1);
 
+	// 1) Create the ParallaxNode
+	_backgroundNode = ParallaxNode::create();
+	this->addChild(_backgroundNode, -1);
+
+	// 2) Create the sprites that will be added to the ParallaxNode
+	_spaceDust1 = Sprite::create("backgrounds/bg_front_spacedust.png");
+	_spaceDust2 = Sprite::create("backgrounds/bg_front_spacedust.png");
+	_planetSunrise = Sprite::create("backgrounds/bg_planetsunrise.png");
+	_galaxy = Sprite::create("backgrounds/bg_galaxy.png");
+	_spatialAnomaly1 = Sprite::create("backgrounds/bg_spacialanomaly.png");
+	_spatialAnomaly2 = Sprite::create("backgrounds/bg_spacialanomaly2.png");
+
+	// 3) Determine relative movement speeds for space dust and background
+	auto dustSpeed = Point(0.1F, 0.1F);
+	auto bgSpeed = Point(0.05F, 0.05F);
+
+	// 4) Add children to ParallaxNode
+	_backgroundNode->addChild(_spaceDust1, 0, dustSpeed, Point(0, visibleSize.height) / 2);
+	_backgroundNode->addChild(_spaceDust2, 0, dustSpeed, Point(_spaceDust1->getContentSize().width, visibleSize.height / 2));
+	_backgroundNode->addChild(_galaxy, -1, bgSpeed, Point(0, visibleSize.height * 0.7));
+	_backgroundNode->addChild(_planetSunrise, -1, bgSpeed, Point(600, visibleSize.height * 0));
+	_backgroundNode->addChild(_spatialAnomaly1, -1, bgSpeed, Point(900, visibleSize.height * 0.3));
+	_backgroundNode->addChild(_spatialAnomaly2, -1, bgSpeed, Point(1500, visibleSize.height * 0.9));
+
+	this->scheduleUpdate();
 
     return true;
 }
@@ -74,6 +99,9 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
     //EventCustom customEndEvent("game_scene_close_event");
     //_eventDispatcher->dispatchEvent(&customEndEvent);
+}
 
-
+void HelloWorld::update(float dt) {
+	auto backgroundScrollVert = Point(-1000, 0);
+	_backgroundNode->setPosition(_backgroundNode->getPosition() + (backgroundScrollVert * dt));
 }

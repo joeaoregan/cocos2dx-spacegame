@@ -45,6 +45,11 @@ public:
 private:
 	SpriteBatchNode* _batchNode;
 	Sprite *_ship;
+
+	ParallaxNode* _backgroundNode;
+	Sprite *_spaceDust1, *_spaceDust2, *_planetSunrise, *_galaxy, *_spatialAnomaly1, *_spatialAnomaly2;
+
+	void update(float dt); // scheduled update
 };
 
 #endif // __HELLOWORLD_SCENE_H__
