@@ -84,6 +84,10 @@ bool HelloWorld::init()
 	_backgroundNode->addChild(_spatialAnomaly1, -1, bgSpeed, Point(900, visibleSize.height * 0.3));
 	_backgroundNode->addChild(_spatialAnomaly2, -1, bgSpeed, Point(1500, visibleSize.height * 0.9));
 
+	HelloWorld::addChild(ParticleSystemQuad::create("particles/Stars1.plist"));
+	HelloWorld::addChild(ParticleSystemQuad::create("particles/Stars2.plist"));
+	HelloWorld::addChild(ParticleSystemQuad::create("particles/Stars3.plist"));
+
 	this->scheduleUpdate();
 
     return true;

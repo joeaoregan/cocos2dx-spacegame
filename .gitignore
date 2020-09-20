@@ -12,4 +12,5 @@ CMakeLists.txt
 # Keep
 !Resources/spritesheets/
 !Resources/backgrounds/
+!Resources/particles/
 !proj.android/app/jni/Android.mk
