@@ -61,7 +61,8 @@ private:
 	int _nextAsteroid;
 	float _nextAsteroidSpawn;
 	Vector<Sprite*> *_shipLasers;
-	int _nextShipLaser;
+	int _nextShipLaser = 0;
+	int _lives = 0;
 
 	void update(float dt); // scheduled update
 };

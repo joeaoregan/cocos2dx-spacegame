@@ -197,6 +197,26 @@ void HelloWorld::update(float dt) {
 				NULL /* DO NOT FORGET TO TERMINATE WITH NULL (unexpected in C++)*/)
 		);
 	}
+
+	// Collisions
+	for (auto asteroid : *_asteroids) {
+		if (!(asteroid->isVisible()))
+			continue;
+		for (auto shipLaser : *_shipLasers) {
+			if (!(shipLaser->isVisible()))
+				continue;
+			if (shipLaser->getBoundingBox().intersectsRect(asteroid->getBoundingBox())) {
+				shipLaser->setVisible(false);
+				asteroid->setVisible(false);
+			}
+		}
+		if (_ship->getBoundingBox().intersectsRect(asteroid->getBoundingBox())) {
+			asteroid->setVisible(false);
+			_ship->runAction(Blink::create(1.0F, 9));
+			_lives--;
+		}
+	}
+
 }
 
 void HelloWorld::onAcceleration(Acceleration* acc, Event* event) {
