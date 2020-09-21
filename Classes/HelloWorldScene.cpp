@@ -93,6 +93,15 @@ bool HelloWorld::init()
 	auto accelerationListener = EventListenerAcceleration::create(CC_CALLBACK_2(HelloWorld::onAcceleration, this));
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(accelerationListener, this);
 
+#define KNUMASTEROIDS 15
+	_asteroids = new Vector<Sprite*>(KNUMASTEROIDS);
+	for (int i = 0; i < KNUMASTEROIDS; ++i) {
+		auto *asteroid = Sprite::createWithSpriteFrameName("asteroid.png");
+		asteroid->setVisible(false);
+		_batchNode->addChild(asteroid);
+		_asteroids->pushBack(asteroid);
+	}
+
 	this->scheduleUpdate();
 
     return true;
@@ -147,6 +156,33 @@ void HelloWorld::update(float dt) {
 	float newY = _ship->getPosition().y + diff;
 	newY = MIN(MAX(newY, minY), maxY);
 	_ship->setPosition(_ship->getPosition().x, newY);
+
+	// Asteroids
+	float curTimeMillis = getTimeTick();
+	if (curTimeMillis > _nextAsteroidSpawn) {
+
+		float randMillisecs = randomValueBetween(0.20F, 1.0F) * 1000;
+		_nextAsteroidSpawn = randMillisecs + curTimeMillis;
+
+		float randY = randomValueBetween(0.0F, winSize.height);
+		float randDuration = randomValueBetween(2.0F, 10.0F);
+
+		Sprite *asteroid = _asteroids->at(_nextAsteroid);
+		_nextAsteroid++;
+
+		if (_nextAsteroid >= _asteroids->size())
+			_nextAsteroid = 0;
+
+		asteroid->stopAllActions();
+		asteroid->setPosition(winSize.width + asteroid->getContentSize().width / 2, randY);
+		asteroid->setVisible(true);
+		asteroid->runAction(
+			Sequence::create(
+				MoveBy::create(randDuration, Point(-winSize.width - asteroid->getContentSize().width, 0)),
+				CallFuncN::create(CC_CALLBACK_1(HelloWorld::setInvisible, this)),
+				NULL /* DO NOT FORGET TO TERMINATE WITH NULL (unexpected in C++)*/)
+		);
+	}
 }
 
 void HelloWorld::onAcceleration(Acceleration* acc, Event* event) {
@@ -166,4 +202,20 @@ void HelloWorld::onAcceleration(Acceleration* acc, Event* event) {
 	float accelDiff = accelX - KRESTACCELX;
 	float accelFraction = accelDiff / KMAXDIFFX;
 	_shipPointsPerSecY = KSHIPMAXPOINTSPERSEC * accelFraction;
+}
+
+float HelloWorld::randomValueBetween(float low, float high)
+{
+	return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
+}
+
+float HelloWorld::getTimeTick() {
+	timeval time;
+	gettimeofday(&time, NULL);
+	unsigned long millisecs = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (float)millisecs;
+}
+
+void HelloWorld::setInvisible(Node * node) {
+	node->setVisible(false);
 }

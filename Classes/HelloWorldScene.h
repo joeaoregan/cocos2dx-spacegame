@@ -44,6 +44,10 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	virtual void onAcceleration(Acceleration* acc, Event* event);
+	//asteroids
+	float randomValueBetween(float low, float high);
+	void setInvisible(Node *node);
+	float getTimeTick();
 
 private:
 	SpriteBatchNode* _batchNode;
@@ -52,6 +56,9 @@ private:
 	ParallaxNodeExtras* _backgroundNode;
 	Sprite *_spaceDust1, *_spaceDust2, *_planetSunrise, *_galaxy, *_spatialAnomaly1, *_spatialAnomaly2;
 	float _shipPointsPerSecY;
+	Vector<Sprite*> *_asteroids;
+	int _nextAsteroid;
+	float _nextAsteroidSpawn;
 
 	void update(float dt); // scheduled update
 };
