@@ -93,6 +93,11 @@ bool HelloWorld::init()
 	auto accelerationListener = EventListenerAcceleration::create(CC_CALLBACK_2(HelloWorld::onAcceleration, this));
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(accelerationListener, this);
 
+	// Touches
+	auto touchListener = EventListenerTouchAllAtOnce::create();
+	touchListener->onTouchesBegan = CC_CALLBACK_2(HelloWorld::onTouchesBegan, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
 #define KNUMASTEROIDS 15
 	_asteroids = new Vector<Sprite*>(KNUMASTEROIDS);
 	for (int i = 0; i < KNUMASTEROIDS; ++i) {
@@ -100,6 +105,15 @@ bool HelloWorld::init()
 		asteroid->setVisible(false);
 		_batchNode->addChild(asteroid);
 		_asteroids->pushBack(asteroid);
+	}
+
+#define KNUMLASERS 5
+	_shipLasers = new Vector<Sprite*>(KNUMLASERS);
+	for (int i = 0; i < KNUMLASERS; ++i) {
+		auto shipLaser = Sprite::createWithSpriteFrameName("laserbeam_blue.png");
+		shipLaser->setVisible(false);
+		_batchNode->addChild(shipLaser);
+		_shipLasers->pushBack(shipLaser);
 	}
 
 	this->scheduleUpdate();
@@ -214,6 +228,22 @@ float HelloWorld::getTimeTick() {
 	gettimeofday(&time, NULL);
 	unsigned long millisecs = (time.tv_sec * 1000) + (time.tv_usec / 1000);
 	return (float)millisecs;
+}
+
+void HelloWorld::onTouchesBegan(const std::vector<Touch*>& touches, Event * event)
+{
+	auto winSize = Director::getInstance()->getWinSize();
+	auto shipLaser = _shipLasers->at(_nextShipLaser++);
+	if (_nextShipLaser >= _shipLasers->size())
+		_nextShipLaser = 0;
+	shipLaser->setPosition(_ship->getPosition() + Point(shipLaser->getContentSize().width / 2, 0));
+	shipLaser->setVisible(true);
+	shipLaser->stopAllActions();
+	shipLaser->runAction(
+		Sequence::create(
+			MoveBy::create(0.5, Point(winSize.width, 0)),
+			CallFuncN::create(CC_CALLBACK_1(HelloWorld::setInvisible, this)),
+			NULL));
 }
 
 void HelloWorld::setInvisible(Node * node) {

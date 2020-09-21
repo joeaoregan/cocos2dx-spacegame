@@ -48,6 +48,7 @@ public:
 	float randomValueBetween(float low, float high);
 	void setInvisible(Node *node);
 	float getTimeTick();
+	void onTouchesBegan(const std::vector<Touch*>& touches, Event *event);
 
 private:
 	SpriteBatchNode* _batchNode;
@@ -59,6 +60,8 @@ private:
 	Vector<Sprite*> *_asteroids;
 	int _nextAsteroid;
 	float _nextAsteroidSpawn;
+	Vector<Sprite*> *_shipLasers;
+	int _nextShipLaser;
 
 	void update(float dt); // scheduled update
 };
