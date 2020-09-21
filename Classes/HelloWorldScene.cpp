@@ -24,8 +24,19 @@
 
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
 
 USING_NS_CC;
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#define SPACE_GAME "SpaceGame.caf"
+#define EXPLOSION_LARGE "explosion_large.caf"
+#define LASER_SHIP "laser_ship.caf"
+#else
+#define SPACE_GAME "SpaceGame.wav"
+#define EXPLOSION_LARGE "explosion_large.wav"
+#define LASER_SHIP "laser_ship.wav"
+#endif
 
 Scene* HelloWorld::createScene()
 {
@@ -122,6 +133,10 @@ bool HelloWorld::init()
 
 	this->scheduleUpdate();
 
+	SimpleAudioEngine::getInstance()->playBackgroundMusic(SPACE_GAME, true);
+	SimpleAudioEngine::getInstance()->preloadEffect(EXPLOSION_LARGE);
+	SimpleAudioEngine::getInstance()->preloadEffect(LASER_SHIP);
+
     return true;
 }
 
@@ -209,6 +224,7 @@ void HelloWorld::update(float dt) {
 			if (!(shipLaser->isVisible()))
 				continue;
 			if (shipLaser->getBoundingBox().intersectsRect(asteroid->getBoundingBox())) {
+				SimpleAudioEngine::getInstance()->playEffect(EXPLOSION_LARGE);
 				shipLaser->setVisible(false);
 				asteroid->setVisible(false);
 			}
@@ -264,6 +280,7 @@ float HelloWorld::getTimeTick() {
 
 void HelloWorld::onTouchesBegan(const std::vector<Touch*>& touches, Event * event)
 {
+	SimpleAudioEngine::getInstance()->playEffect(LASER_SHIP);
 	auto winSize = Director::getInstance()->getWinSize();
 	auto shipLaser = _shipLasers->at(_nextShipLaser++);
 	if (_nextShipLaser >= _shipLasers->size())

@@ -124,6 +124,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	searchPaths.insert(searchPaths.begin(), "particles");
 	searchPaths.insert(searchPaths.begin(), "spritesheets");
 	searchPaths.insert(searchPaths.begin(), "fonts");
+	searchPaths.insert(searchPaths.begin(), "audio");
 	fileUtils->setSearchPaths(searchPaths);
 
     // create a scene. it's an autorelease object
