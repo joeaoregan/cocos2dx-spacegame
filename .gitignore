@@ -7,7 +7,6 @@
 /proj.win32/
 /Resources/*
 .cocos-project.json
-CMakeLists.txt
 
 # Keep
 !Resources/spritesheets/

@@ -43,12 +43,15 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
+	virtual void onAcceleration(Acceleration* acc, Event* event);
+
 private:
 	SpriteBatchNode* _batchNode;
 	Sprite *_ship;
 
 	ParallaxNodeExtras* _backgroundNode;
 	Sprite *_spaceDust1, *_spaceDust2, *_planetSunrise, *_galaxy, *_spatialAnomaly1, *_spatialAnomaly2;
+	float _shipPointsPerSecY;
 
 	void update(float dt); // scheduled update
 };

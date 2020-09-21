@@ -117,6 +117,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
+	FileUtils *fileUtils = FileUtils::sharedFileUtils();
+	std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+	searchPaths.insert(searchPaths.begin(), "backgrounds");
+	searchPaths.insert(searchPaths.begin(), "particles");
+	searchPaths.insert(searchPaths.begin(), "spritesheets");
+	fileUtils->setSearchPaths(searchPaths);
+
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
 
