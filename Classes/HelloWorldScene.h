@@ -30,6 +30,11 @@
 
 USING_NS_CC;
 
+typedef enum {
+	KENDREASONWIN,
+	KENDREASONLOSE
+} EndReason;
+
 class HelloWorld : public cocos2d::Scene
 {
 public:
@@ -63,8 +68,12 @@ private:
 	Vector<Sprite*> *_shipLasers;
 	int _nextShipLaser = 0;
 	int _lives = 0;
+	double _gameOverTime;
+	bool _gameOver = false;
 
 	void update(float dt); // scheduled update
+	void endScene(EndReason endReason);
+	void restartTapped(Ref* pSender);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

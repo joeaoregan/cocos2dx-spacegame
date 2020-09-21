@@ -117,11 +117,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
+	// Resource subfolders (for android mostly)
 	FileUtils *fileUtils = FileUtils::sharedFileUtils();
 	std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
 	searchPaths.insert(searchPaths.begin(), "backgrounds");
 	searchPaths.insert(searchPaths.begin(), "particles");
 	searchPaths.insert(searchPaths.begin(), "spritesheets");
+	searchPaths.insert(searchPaths.begin(), "fonts");
 	fileUtils->setSearchPaths(searchPaths);
 
     // create a scene. it's an autorelease object

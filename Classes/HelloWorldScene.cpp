@@ -116,11 +116,14 @@ bool HelloWorld::init()
 		_shipLasers->pushBack(shipLaser);
 	}
 
+	_lives = 3;
+	double curTime = getTimeTick();
+	_gameOverTime = curTime + 30000;
+
 	this->scheduleUpdate();
 
     return true;
 }
-
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
@@ -217,6 +220,15 @@ void HelloWorld::update(float dt) {
 		}
 	}
 
+	// Win / Lose conditions
+	if (_lives <= 0) {
+		_ship->stopAllActions();
+		_ship->setVisible(false);
+		this->endScene(KENDREASONLOSE);
+	}
+	else if (curTimeMillis >= _gameOverTime) {
+		this->endScene(KENDREASONWIN);
+	}
 }
 
 void HelloWorld::onAcceleration(Acceleration* acc, Event* event) {
@@ -268,4 +280,43 @@ void HelloWorld::onTouchesBegan(const std::vector<Touch*>& touches, Event * even
 
 void HelloWorld::setInvisible(Node * node) {
 	node->setVisible(false);
+}
+
+void HelloWorld::restartTapped(Ref* pSender) {
+	Director::getInstance()->replaceScene
+	(TransitionZoomFlipX::create(0.5, this->createScene()));
+	// reschedule
+	this->scheduleUpdate();
+}
+
+void HelloWorld::endScene(EndReason endReason) {
+	if (_gameOver)
+		return;
+	_gameOver = true;
+
+	auto winSize = Director::getInstance()->getWinSize();
+	char message[10] = "You Win";
+	if (endReason == KENDREASONLOSE)
+		strcpy(message, "You Lose");
+	auto label = Label::createWithBMFont("Arial.fnt", message);
+	label->setScale(0.1F);
+	label->setPosition(winSize.width / 2, winSize.height*0.6F);
+	this->addChild(label);
+
+	strcpy(message, "Restart");
+	auto restartLabel = Label::createWithBMFont("Arial.fnt", message);
+	auto restartItem = MenuItemLabel::create(restartLabel, CC_CALLBACK_1(HelloWorld::restartTapped, this));
+	restartItem->setScale(0.1F);
+	restartItem->setPosition(winSize.width / 2, winSize.height*0.4);
+
+	auto *menu = Menu::create(restartItem, NULL);
+	menu->setPosition(Point::ZERO);
+	this->addChild(menu);
+
+	// clear label and menu
+	restartItem->runAction(ScaleTo::create(0.5F, 1.0F));
+	label->runAction(ScaleTo::create(0.5F, 1.0F));
+
+	// Terminate update callback
+	this->unscheduleUpdate();
 }

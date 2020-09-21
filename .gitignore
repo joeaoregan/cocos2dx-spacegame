@@ -12,4 +12,5 @@
 !Resources/spritesheets/
 !Resources/backgrounds/
 !Resources/particles/
+!Resources/fonts/
 !proj.android/app/jni/Android.mk
